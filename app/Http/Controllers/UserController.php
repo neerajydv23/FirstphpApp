@@ -8,6 +8,22 @@ use Illuminate\Validation\Rule;
 
 class UserController extends Controller
 {
+
+    public function logout()
+    {
+        auth()->logout();
+        return redirect('/')->with('success','You have successfully logged out.');
+    }
+
+    public function showCorrectHomepage()
+    {
+        if(auth()->check()){
+            return view('homepage-feed');
+        }
+        else{
+            return view('homepage');
+        }
+    }
     public function login (Request $request){
         $incomingFields = $request->validate([
             'loginusername'=>'required',
@@ -16,10 +32,10 @@ class UserController extends Controller
 
         if(auth()->attempt(['username'=>$incomingFields['loginusername'],'password'=>$incomingFields['loginpassword']])){
             $request->session()->regenerate();
-            return 'You are logged in.';
+            return redirect('/')->with('success','You have successfully logged in.');
         }
         else{
-            return 'Invalid login credentials.';
+            return redirect('/')->with('failure','Invalid login credentials.');
         }
 
 
@@ -31,7 +47,8 @@ class UserController extends Controller
             'email' => ['required', 'email', Rule::unique('users', 'email')],
             'password' => ['required', 'min:3', 'max:255', 'confirmed']
         ]);
-        User::create($incomingFields);
-        return 'This is the register page.';
+        $user=  User::create($incomingFields);
+        auth()->login($user);
+        return redirect('/')->with('success','You have successfully registered.');
     }
 }
