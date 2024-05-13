@@ -18,12 +18,12 @@ use App\Http\Controllers\UserController;
 */
 
 // User Routes
-Route::get('/', [UserController::class, 'showCorrectHomepage']);
-Route::post('/register', [UserController::class, 'register']);
-Route::post('/login', [UserController::class, 'login']);
-Route::post('/logout', [UserController::class, 'logout']);
+Route::get('/', [UserController::class, 'showCorrectHomepage'])->name('login');
+Route::post('/register', [UserController::class, 'register'])->middleware('guest');
+Route::post('/login', [UserController::class, 'login'])->middleware('guest');
+Route::post('/logout', [UserController::class, 'logout'])->middleware('isLoggedin');
 
 // Blog Post Routes
-Route::get('/create-post', [PostController::class, 'showCreateForm']);
-Route::post('/create-post', [PostController::class, 'storeNewPost']);
+Route::get('/create-post', [PostController::class, 'showCreateForm'])->middleware('isLoggedin');
+Route::post('/create-post', [PostController::class, 'storeNewPost'])->middleware('isLoggedin');
 Route::get('/post/{post}', [PostController::class, 'viewSinglePost']);
