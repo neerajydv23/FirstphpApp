@@ -27,3 +27,6 @@ Route::post('/logout', [UserController::class, 'logout'])->middleware('isLoggedi
 Route::get('/create-post', [PostController::class, 'showCreateForm'])->middleware('isLoggedin');
 Route::post('/create-post', [PostController::class, 'storeNewPost'])->middleware('isLoggedin');
 Route::get('/post/{post}', [PostController::class, 'viewSinglePost']);
+
+//  Profile Routes
+Route::get('/profile/{user:username}', [UserController::class, 'profile']);
