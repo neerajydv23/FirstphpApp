@@ -8,9 +8,7 @@ use Illuminate\Http\Request;
 class PostController extends Controller
 {
     public function delete(Post $post){
-        if(auth()->user()->cannot('delete',$post)){
-            return 'You are not authorized to delete this post.';
-        }
+        
         $post->delete();
         return redirect('/profile/' . auth()->user()->username)->with('success','Post deleted successfully!');
     }
