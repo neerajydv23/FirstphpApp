@@ -7,6 +7,26 @@ use Illuminate\Http\Request;
 
 class PostController extends Controller
 {
+
+    public function update(Post $post, Request $request)
+    {
+        $incomingFields = $request->validate([
+            'title' => 'required',
+            'body' => 'required',
+        ]);
+
+        $incomingFields['title']= strip_tags($incomingFields['title']);
+        $incomingFields['body']= strip_tags($incomingFields['body']);
+
+        $post->update($incomingFields);
+        return redirect("/post/{$post->id}")->with('success','Post updated successfully!');
+    }
+
+    public function showEditForm(Post $post)
+    {
+        return view('edit-post',['post'=>$post]);
+    }
+     
     public function delete(Post $post){
         
         $post->delete();
