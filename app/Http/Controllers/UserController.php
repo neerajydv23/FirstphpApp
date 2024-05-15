@@ -8,6 +8,21 @@ use Illuminate\Validation\Rule;
 
 class UserController extends Controller
 {
+    public function storeAvatar(Request $request)
+    {
+        $incomingFields = $request->validate([
+            'avatar' => ['required', 'image', 'max:2048']
+        ]);
+        $avatarPath = $incomingFields['avatar']->store('public/avatars');
+        auth()->user()->update(['avatar' => $avatarPath]);
+        return redirect('/')->with('success', 'Avatar uploaded successfully.');
+    }
+
+    public function showAvatarForm()
+    {
+        return view('avatar-form');
+    }
+
     public function profile(User $user)
     {
         return view('profile-posts',['username'=> $user->username,'posts'=>$user->posts()->latest()->get()]);
